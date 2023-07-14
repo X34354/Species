@@ -1,0 +1,27 @@
+[general]
+# Set the default page title
+# title = "My Streamlit App"
+
+# Set the base URL path for the app (useful for reverse proxy setups)
+# baseUrlPath = "/myapp"
+
+# Configure the Streamlit server port
+# port = 8501
+
+[server]
+maxUploadSize=1028
+# Configure the Streamlit server's behavior
+# headless = true
+# enableCORS = false
+
+[theme]
+# Customize the appearance of the app
+# primaryColor = "#F63366"
+# backgroundColor = "#FFFFFF"
+
+# Set custom CSS styles
+# customCSS = """
+#   body {
+#     font-family: "Arial", sans-serif;
+#   }
+# """
