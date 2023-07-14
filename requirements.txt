@@ -4,6 +4,6 @@ scipy
 seaborn
 streamlit
 zipp
-opencv-python-headless==4.5.4.60
+opencv-python==4.6.0.66
 
 
