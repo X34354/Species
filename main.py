@@ -1,3 +1,5 @@
+
+
 import cv2
 from ultralytics import YOLO
 import pandas as pd
@@ -17,7 +19,7 @@ UPLOAD_FOLDER_videos = 'videos'
 UPLOAD_FOLDER_model = 'models'
 test_species_dic = { 'Panthera onca' : 0,  'Puma concolor': 1,  'Leopardus pardalis' : 2,
                      'Crax rubra' : 3,  'Aramides albiventris' : 4, 'Aramus Guarauna' : 5}
-
+@st.cache_resource
 def save_uploaded_file(uploaded_file, path):
     # Crea la carpeta de subida si no existe
     if not os.path.exists(path):
@@ -32,13 +34,14 @@ def save_uploaded_file(uploaded_file, path):
 
 
 # Función para guardar el DataFrame como archivo CSV
+@st.cache_resource
 def guardar_como_csv(dataframe):
     csv_file = "resultados.csv"
     dataframe.to_csv(csv_file, index=False)
     return csv_file
 #load model 
 
-
+@st.cache_resource
 def get_download_link(file_path):
     file_extension = os.path.splitext(file_path)[1].lower()
 
@@ -57,7 +60,7 @@ def get_download_link(file_path):
 
     return href
 
-
+@st.cache_resource
 def zip_videos(folder_path, zip_path):
     current_path = os.getcwd()
     # Check if the folder path exists
@@ -71,7 +74,12 @@ def zip_videos(folder_path, zip_path):
 #model = YOLO('../models/model_l.pt')  # load model
 test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' , 3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }
 
-
+@st.cache_resource
+def load_model(model_file,UPLOAD_FOLDER_model) :
+    file_path = save_uploaded_file(model_file,UPLOAD_FOLDER_model)
+    model = YOLO(file_path)  # Cargar el modelo desde el archivo
+    st.write("Model loaded successfully.")
+    return model
 
 def main():
     st.title('Species model')
@@ -89,9 +97,7 @@ def main():
     model_file = st.file_uploader("Upload Model", type=["pt"])
 
     if model_file is not None:
-        file_path = save_uploaded_file(model_file,UPLOAD_FOLDER_model)
-        model = YOLO(file_path)  # Cargar el modelo desde el archivo
-        st.write("Model loaded successfully.")
+      model = load_model(model_file,UPLOAD_FOLDER_model)
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
@@ -130,5 +136,10 @@ def main():
 
         time.sleep(15)
         delete_files_in_folder('/datasets/')
+
+      
+    if st.button("Clear All"):
+        # Clears all st.cache_resource caches:
+        st.cache_resource.clear()
 if __name__ == '__main__' :
     main()
