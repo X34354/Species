@@ -8,7 +8,9 @@
 # Configure the Streamlit server port
 # port = 8501
 
-[server]
+[browser]
+gatherUsageStats = false
+
 maxUploadSize=200
 # Configure the Streamlit server's behavior
 # headless = true
