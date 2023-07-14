@@ -145,8 +145,7 @@ dmypy.json
 
 /torchlogs
 
-*.txt
+
 *.png
-*.csv
 *.gif
 *.zip
