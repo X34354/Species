@@ -2,9 +2,9 @@
 numpy==1.24.4
 pandas==2.0.3
 scikit-learn
-scipy==1.10.1
-seaborn==0.11.2
-streamlit==1.24.1
-zipp==3.8.1
+scipy
+seaborn
+streamlit
+zipp
 ultralytics
 
