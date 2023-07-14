@@ -11,7 +11,7 @@
 [browser]
 gatherUsageStats = false
 
-maxUploadSize=200
+maxUploadSize=400
 # Configure the Streamlit server's behavior
 # headless = true
 # enableCORS = false
