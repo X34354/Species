@@ -5,5 +5,6 @@ scipy
 seaborn
 streamlit
 zipp
+opencv-python
 
 
