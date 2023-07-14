@@ -10,20 +10,23 @@ import time
 import zipfile
 
 
-UPLOAD_FOLDER = 'videos'
+UPLOAD_FOLDER_videos = 'videos'
+UPLOAD_FOLDER_model = 'models'
 test_species_dic = { 'Panthera onca' : 0,  'Puma concolor': 1,  'Leopardus pardalis' : 2,
                      'Crax rubra' : 3,  'Aramides albiventris' : 4, 'Aramus Guarauna' : 5}
-def save_uploaded_file(uploaded_file):
+
+def save_uploaded_file(uploaded_file, path):
     # Crea la carpeta de subida si no existe
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
+    if not os.path.exists(path):
+        os.makedirs(path)
 
     # Guarda el archivo en la carpeta de subida
-    file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.name)
+    file_path = os.path.join(path, uploaded_file.name)
     with open(file_path, 'wb') as file:
         file.write(uploaded_file.getbuffer())
 
     return file_path
+
 
 # Función para guardar el DataFrame como archivo CSV
 def guardar_como_csv(dataframe):
@@ -62,7 +65,7 @@ def zip_videos(folder_path, zip_path):
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, os.path.basename(file_path))
 
-model = YOLO('../models/model_l.pt')  # load model
+#model = YOLO('../models/model_l.pt')  # load model
 test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' , 3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }
 
 
@@ -80,6 +83,12 @@ def main():
     # Configurar la carga de archivos
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
+    model_file = st.file_uploader("Upload Model", type=["pt"])
+
+    if model_file is not None:
+        file_path = save_uploaded_file(model_file,UPLOAD_FOLDER_model)
+        model = YOLO(file_path)  # Cargar el modelo desde el archivo
+        st.write("Model loaded successfully.")
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
@@ -94,7 +103,7 @@ def main():
 
                 # Procesar el video y generar el CSV
                 print(video_file)
-                file_path = save_uploaded_file(video_file)
+                file_path = save_uploaded_file(video_file,UPLOAD_FOLDER_videos)
                 df_final = unique_test(model,file_path, spe = None , dic =  test_species_dic , change = True)
                 df_final = df_final[df_final['%'] == df_final['%'].max()]
                 df_con = pd.concat([df_con,df_final], axis = 0)
