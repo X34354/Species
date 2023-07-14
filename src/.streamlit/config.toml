@@ -9,7 +9,7 @@
 # port = 8501
 
 [server]
-maxUploadSize=1028
+maxUploadSize=200
 # Configure the Streamlit server's behavior
 # headless = true
 # enableCORS = false
