@@ -104,25 +104,36 @@ def get_download_link(file_path):
     with open(file_path, "rb") as file:
         file_content = file.read()
     return file_content
+
+def hide_streamlit_menu_footer():
+    hide_streamlit_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        </style>
+        """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+def process_uploaded_files(model, uploaded_files):
+    df_con = pd.DataFrame()
+
+    for video_file in uploaded_files:
+        file_path = save_uploaded_file(video_file, UPLOAD_FOLDER_videos)
+        df_final = unique_test(model, file_path, spe=None, dic=test_species_dic, change=False)
+        df_final = df_final[df_final['%'] == df_final['%'].max()]
+        df_con = pd.concat([df_con, df_final])
+
+    return df_con
+
 def main():
     st.title('Species model')
-    hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """ 
-    hidde = False
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-    
-    # Configurar la carga de archivos
+    hide_streamlit_menu_footer()
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
     model_file = st.file_uploader("Upload Model", type=["pt"])
 
     if model_file is not None:
         model = load_model(model_file, UPLOAD_FOLDER_model)
-      
+
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
@@ -130,53 +141,33 @@ def main():
     hide_download_button = True
 
     if st.button("Predict"):
-        df_con = pd.DataFrame()
-        prediccion = []
-
         if uploaded_files is not None:
-            for video_file in uploaded_files:
+            df_con = process_uploaded_files(model, uploaded_files)
 
-                # Procesar el video y generar el CSV
-                print(video_file)
-                file_path = save_uploaded_file(video_file, UPLOAD_FOLDER_videos)
-                df_final = unique_test(model, file_path, spe=None, dic=test_species_dic, change=False)
-                df_final = df_final[df_final['%'] == df_final['%'].max()]
-                df_con = pd.concat([df_con, df_final], axis=0)
-                pass_video()
-            
-            delete_files_in_folder('/videos/')
             csv_file = guardar_como_csv(df_con)
 
-            # Mostrar el enlace de descarga para el archivo CSV
             if download_csv:
                 st.write("Download CSV:")
                 file_content = get_download_link(csv_file)
-                st.download_button(label=str('CSV'), data=file_content, file_name= csv_file )
-            
+                st.download_button(label=str('CSV'), data=file_content, file_name=csv_file)
+
             pass_video()
             hide_download_button = False
-        
+
     if hide_download_button:
         st.write("Waiting for prediction...")
-    
 
-        
-
-
-    if  download_videos : 
+    if download_videos:
         video_path = os.listdir('datasets/')
         st.write("Download Videos:")
         for ele in video_path:
-            
             file_content = get_download_link('datasets/' + ele)
             st.download_button(label=str(ele), data=file_content, file_name=ele)
 
-
     if st.button("Clear All"):
-        # Clears all st.cache_resource caches:
         delete_files_in_directory('datasets/')
-        #delete_files_in_folder('datasets/')
+        delete_files_in_directory('videos/')
         st.cache_resource.clear()
-        
+
 if __name__ == '__main__' :
     main()
