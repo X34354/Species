@@ -1,5 +1,4 @@
 
-
 import cv2
 from ultralytics import YOLO
 import pandas as pd
@@ -9,7 +8,6 @@ from src.test import unique_test , pass_video, delete_files_in_folder
 import os
 import base64
 import os
-
 import time
 
 
@@ -99,6 +97,7 @@ def main():
 
     if model_file is not None:
       model = load_model(model_file,UPLOAD_FOLDER_model)
+      
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
