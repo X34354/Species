@@ -129,15 +129,20 @@ def main():
                 df_final = df_final[df_final['%'] == df_final['%'].max()]
                 df_con = pd.concat([df_con,df_final], axis = 0)
 
+                download_clicked = st.button("Download")
                 if download_videos:
                     pass_video()
-                    video_path = os.listdir( 'datasets/')
-                    st.write("Download Videos:")
-                    file_content = get_download_link('datasets/' + video_path[0])
-                    #st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
-                    st.download_button(label="Download CSV", data=file_content, file_name=file_path)
-                    #delete_files_in_folder('/datasets/')
+                    if download_clicked :
 
+                    
+                        video_path = os.listdir( 'datasets/')
+                        st.write("Download Videos:")
+                        file_content = get_download_link('datasets/' + video_path[0])
+                        #st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
+                        st.download_button(label="Download CSV", data=file_content, file_name=file_path)
+                        #delete_files_in_folder('/datasets/')
+                    if not download_clicked:
+                        st.markdown("Click the button to download the file.")
             delete_files_in_folder('/videos/')
             
             csv_file = guardar_como_csv(df_con)
