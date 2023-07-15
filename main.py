@@ -169,7 +169,7 @@ def main():
         for ele in video_path:
             
             file_content = get_download_link('datasets/' + ele)
-            st.download_button(label=str(ele), data=file_content, file_name='datasets/' + ele)
+            st.download_button(label=str(ele), data=file_content, file_name=ele)
 
 
     if st.button("Clear All"):
