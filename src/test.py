@@ -164,32 +164,43 @@ def delete_files_in_folder(folder_path):
                 print(f"Error deleting file: {file_path}\n{e}")
 
 def pass_video():
-    # Ruta principal
+    # Main directory path
     main_directory = '/datasets'
     current_path = os.getcwd()
-    # Check if the folder path exists
+
+    # Check if the main directory path exists
     main_directory = "".join([current_path, main_directory])
-    # Obtener la lista de carpetas en la ruta principal
+
+    # Get the list of folders in the main directory
     folders = next(os.walk(main_directory))[1]
 
-    # Iterar sobre cada carpeta
+    # Iterate over each folder
     for folder in folders:
-        # Obtener la ruta completa de la carpeta
+        # Get the full path of the folder
         folder_path = os.path.join(main_directory, folder)
 
-        # Obtener la lista de archivos en la carpeta
+        # Get the list of files in the folder
         files = os.listdir(folder_path)
 
-        # Iterar sobre cada archivo en la carpeta
+        # Iterate over each file in the folder
         for file in files:
-            # Obtener la ruta completa del archivo
+            # Get the full path of the file
             file_path = os.path.join(folder_path, file)
 
+            # Check if the file already exists in the destination folder
+            destination_file_path = os.path.join(main_directory, file)
+            count = 1
+            while os.path.exists(destination_file_path):
+                # Append a number to the file name for the copy
+                file_name, extension = os.path.splitext(file)
+                new_file_name = f"{file_name}_copy{count}{extension}"
+                destination_file_path = os.path.join(main_directory, new_file_name)
+                count += 1
 
-            # Mover el archivo a la carpeta principal
-            shutil.move(file_path, main_directory)
+            # Move the file to the destination folder
+            shutil.move(file_path, destination_file_path)
 
-        # Eliminar la carpeta vacía
+        # Remove the empty folder
         os.rmdir(folder_path)
 
 if __name__ == '__main__' :
