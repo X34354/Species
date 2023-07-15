@@ -101,7 +101,7 @@ def main():
             </style>
             """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
+    delete_files_in_folder('/datasets/')
     # Configurar la carga de archivos
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
@@ -128,21 +128,11 @@ def main():
                 df_final = unique_test(model,file_path, spe = None , dic =  test_species_dic , change = True)
                 df_final = df_final[df_final['%'] == df_final['%'].max()]
                 df_con = pd.concat([df_con,df_final], axis = 0)
-
-                download_clicked = st.button("Download")
-                if download_videos:
-                    pass_video()
-                    if download_clicked :
+                pass_video()
+                
 
                     
-                        video_path = os.listdir( 'datasets/')
-                        st.write("Download Videos:")
-                        file_content = get_download_link('datasets/' + video_path[0])
-                        #st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
-                        st.download_button(label="Download CSV", data=file_content, file_name=file_path)
-                        #delete_files_in_folder('/datasets/')
-                    if not download_clicked:
-                        st.markdown("Click the button to download the file.")
+
             delete_files_in_folder('/videos/')
             
             csv_file = guardar_como_csv(df_con)
@@ -157,10 +147,20 @@ def main():
 
             pass_video()
 
+            download_clicked = st.button("Download")
+                                         
+            if download_clicked :
+                video_path = os.listdir( 'datasets/')
+                st.write("Download Videos:")
+                file_content = get_download_link('datasets/' + video_path[0])
+                #st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
+                st.download_button(label="Download CSV", data=file_content, file_name=file_path)
+                #delete_files_in_folder('/datasets/')
+            if not download_clicked:
+                st.markdown("Click the button to download the file.")
 
-
-        time.sleep(15)
-        delete_files_in_folder('/datasets/')
+        #time.sleep(15)
+        #delete_files_in_folder('/datasets/')
 
       
     if st.button("Clear All"):
