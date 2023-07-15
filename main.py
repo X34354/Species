@@ -168,7 +168,7 @@ def main():
         delete_files_in_directory('datasets/')
         delete_files_in_directory('videos/')
         st.cache_resource.clear()
-        uploaded_files
+        
 
 if __name__ == '__main__' :
     main()
