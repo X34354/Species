@@ -12,7 +12,9 @@ import time
 
 
 import zipfile
-
+def clear_cache():
+    # Esta función se ejecutará si no hay actividad durante más de 1 minuto
+    st.caching.clear_cache()
 
 UPLOAD_FOLDER_videos = 'videos'
 UPLOAD_FOLDER_model = 'models'
@@ -31,7 +33,18 @@ def save_uploaded_file(uploaded_file, path):
 
     return file_path
 
+def delete_files_in_directory(directory):
+    # Get the list of files in the specified directory
+    files = os.listdir(directory)
 
+    # Iterate through each file and delete it
+    for file in files:
+        file_path = os.path.join(directory, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+            print(f"Deleted file: {file_path}")
+
+    print("Deletion of files completed.")
 # Función para guardar el DataFrame como archivo CSV
 @st.cache_resource
 def guardar_como_csv(dataframe):
@@ -91,7 +104,6 @@ def get_download_link(file_path):
     with open(file_path, "rb") as file:
         file_content = file.read()
     return file_content
-
 def main():
     st.title('Species model')
     hide_streamlit_style = """
@@ -99,21 +111,23 @@ def main():
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             </style>
-            """
+            """ 
+    hidde = False
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-    delete_files_in_folder('/datasets/')
+    
     # Configurar la carga de archivos
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
     model_file = st.file_uploader("Upload Model", type=["pt"])
 
     if model_file is not None:
-      model = load_model(model_file,UPLOAD_FOLDER_model)
+        model = load_model(model_file, UPLOAD_FOLDER_model)
       
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
     download_videos = st.checkbox("Download Videos")
+    hide_download_button = True
 
     if st.button("Predict"):
         df_con = pd.DataFrame()
@@ -124,47 +138,45 @@ def main():
 
                 # Procesar el video y generar el CSV
                 print(video_file)
-                file_path = save_uploaded_file(video_file,UPLOAD_FOLDER_videos)
-                df_final = unique_test(model,file_path, spe = None , dic =  test_species_dic , change = True)
+                file_path = save_uploaded_file(video_file, UPLOAD_FOLDER_videos)
+                df_final = unique_test(model, file_path, spe=None, dic=test_species_dic, change=False)
                 df_final = df_final[df_final['%'] == df_final['%'].max()]
-                df_con = pd.concat([df_con,df_final], axis = 0)
+                df_con = pd.concat([df_con, df_final], axis=0)
                 pass_video()
-                
-
-                    
-
-            delete_files_in_folder('/videos/')
             
+            delete_files_in_folder('/videos/')
             csv_file = guardar_como_csv(df_con)
 
-
-
             # Mostrar el enlace de descarga para el archivo CSV
-            if download_csv : 
-                st.write("download  CSV:")
-                st.markdown(get_download_link(csv_file), unsafe_allow_html=True)
+            if download_csv:
+                st.write("Download CSV:")
+                file_content = get_download_link(csv_file)
+                st.download_button(label=str('CSV'), data=file_content, file_name= csv_file )
             
-
             pass_video()
+            hide_download_button = False
+        
+    if hide_download_button:
+        st.write("Waiting for prediction...")
+    
 
-            download_clicked = st.button("Download")
-                                         
-            if download_clicked :
-                video_path = os.listdir( 'datasets/')
-                st.write("Download Videos:")
-                file_content = get_download_link('datasets/' + video_path[0])
-                #st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
-                st.download_button(label="Download CSV", data=file_content, file_name=file_path)
-                #delete_files_in_folder('/datasets/')
-            if not download_clicked:
-                st.markdown("Click the button to download the file.")
+        
 
-        #time.sleep(15)
-        #delete_files_in_folder('/datasets/')
 
-      
+    if  download_videos : 
+        video_path = os.listdir('datasets/')
+        st.write("Download Videos:")
+        for ele in video_path:
+            
+            file_content = get_download_link('datasets/' + ele)
+            st.download_button(label=str(ele), data=file_content, file_name='datasets/' + ele)
+
+
     if st.button("Clear All"):
         # Clears all st.cache_resource caches:
+        delete_files_in_directory('datasets/')
+        #delete_files_in_folder('datasets/')
         st.cache_resource.clear()
+        
 if __name__ == '__main__' :
     main()
