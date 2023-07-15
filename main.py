@@ -38,7 +38,7 @@ def guardar_como_csv(dataframe):
     csv_file = "resultados.csv"
     dataframe.to_csv(csv_file, index=False)
     return csv_file
-#load model 
+#load model
 
 @st.cache_resource
 def get_download_link(file_path):
@@ -49,7 +49,7 @@ def get_download_link(file_path):
             csv_string = file.read()
         base64_encoded = base64.b64encode(csv_string.encode()).decode("utf-8")
         href = f'<a href="data:file/csv;base64,{base64_encoded}" download="{file_path}">Download CSV</a>'
-    elif file_extension == ".zip":
+    elif file_extension == ".avi":
         with open(file_path, "rb") as file:
             zip_data = file.read()
         base64_encoded = base64.b64encode(zip_data).decode("utf-8")
@@ -60,15 +60,14 @@ def get_download_link(file_path):
     return href
 
 @st.cache_resource
-def zip_videos(folder_path, zip_path):
+def zip_videos(folder_path, zip_path,video_file):
     current_path = os.getcwd()
-    # Check if the folder path exists
     folder_path = "".join([current_path, folder_path])
+    # Obtener la ruta del archivo en el sistema de archivos
+    file_path = "".join([folder_path, video_file.name])
+    # Escribir el archivo en el zip
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, _, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                zipf.write(file_path, os.path.basename(file_path))
+        zipf.write(file_path, os.path.basename(file_path))
 
 #model = YOLO('../models/model_l.pt')  # load model
 test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' , 3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }
@@ -79,6 +78,15 @@ def load_model(model_file,UPLOAD_FOLDER_model) :
     model = YOLO(file_path)  # Cargar el modelo desde el archivo
     st.write("Model loaded successfully.")
     return model
+
+def change_extension(file_name):
+    parts = file_name.split('.')
+    if parts[-1] != '.avi':
+        name = parts[0] + '.avi'
+        return name
+    else:
+        return file_name
+
 
 def main():
     st.title('Species model')
@@ -97,7 +105,7 @@ def main():
 
     if model_file is not None:
       model = load_model(model_file,UPLOAD_FOLDER_model)
-      
+
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
@@ -117,27 +125,34 @@ def main():
                 df_final = df_final[df_final['%'] == df_final['%'].max()]
                 df_con = pd.concat([df_con,df_final], axis = 0)
 
+                if download_videos:
+                    pass_video()
+                    video_path = os.listdir( 'datasets/')
+                    st.write("Download Videos:")
+                    st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
+
+                    delete_files_in_folder('/datasets/')
+
             delete_files_in_folder('/videos/')
-            
+
             csv_file = guardar_como_csv(df_con)
 
+
+
             # Mostrar el enlace de descarga para el archivo CSV
-            st.write("download  CSV:")
-            st.markdown(get_download_link(csv_file), unsafe_allow_html=True)
-            
+            if download_csv :
+                st.write("download  CSV:")
+                st.markdown(get_download_link(csv_file), unsafe_allow_html=True)
 
-        pass_video()
 
-        if download_videos:
-            zip_path = "videos.zip"
-            zip_videos('/datasets/', zip_path)
-            st.write("Download Videos:")
-            st.markdown(get_download_link(zip_path), unsafe_allow_html=True)
+            pass_video()
+
+
 
         time.sleep(15)
         delete_files_in_folder('/datasets/')
 
-      
+
     if st.button("Clear All"):
         # Clears all st.cache_resource caches:
         st.cache_resource.clear()
