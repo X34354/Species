@@ -130,7 +130,12 @@ dmypy.json
 .pyre/
 
 
-
+*.avi
+*.mp4
+*.MP4
+*.AVI
+*.mov
+*.MOV
 *.json
 *.pt
 *.pth
