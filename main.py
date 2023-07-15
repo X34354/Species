@@ -38,7 +38,7 @@ def guardar_como_csv(dataframe):
     csv_file = "resultados.csv"
     dataframe.to_csv(csv_file, index=False)
     return csv_file
-#load model
+#load model 
 
 @st.cache_resource
 def get_download_link(file_path):
@@ -87,6 +87,10 @@ def change_extension(file_name):
     else:
         return file_name
 
+def get_download_link(file_path):
+    with open(file_path, "rb") as file:
+        file_content = file.read()
+    return file_content
 
 def main():
     st.title('Species model')
@@ -105,7 +109,7 @@ def main():
 
     if model_file is not None:
       model = load_model(model_file,UPLOAD_FOLDER_model)
-
+      
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
 
     download_csv = st.checkbox("Download CSV")
@@ -129,21 +133,22 @@ def main():
                     pass_video()
                     video_path = os.listdir( 'datasets/')
                     st.write("Download Videos:")
-                    st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
-
-                    delete_files_in_folder('/datasets/')
+                    file_content = get_download_link('datasets/' + video_path[0])
+                    #st.markdown(get_download_link('datasets/' + video_path[0]), unsafe_allow_html=True)
+                    st.download_button(label="Download CSV", data=file_content, file_name=file_path)
+                    #delete_files_in_folder('/datasets/')
 
             delete_files_in_folder('/videos/')
-
+            
             csv_file = guardar_como_csv(df_con)
 
 
 
             # Mostrar el enlace de descarga para el archivo CSV
-            if download_csv :
+            if download_csv : 
                 st.write("download  CSV:")
                 st.markdown(get_download_link(csv_file), unsafe_allow_html=True)
-
+            
 
             pass_video()
 
@@ -152,7 +157,7 @@ def main():
         time.sleep(15)
         delete_files_in_folder('/datasets/')
 
-
+      
     if st.button("Clear All"):
         # Clears all st.cache_resource caches:
         st.cache_resource.clear()
