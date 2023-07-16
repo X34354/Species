@@ -112,7 +112,7 @@ if __name__ == '__main__' :
     
 
     df = pd.read_csv('../data/df_filter.csv')
-    df_specie = pd.read_excel('../data/Especies Red.xlsx')
+    df_specie = pd.read_excel('../data/Especies Red.csv')
     # Iterate over the names in the 'name' column of the DataFrame
     for nom in l : 
         for name in df_specie['SpeciesID']:
