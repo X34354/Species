@@ -128,7 +128,7 @@ if __name__ == '__main__' :
                 frame_count = 400
             else :
                 frame_count = 130
-            output_folder = 'G:/data/' + str(dataset) + '/' + str(name) + '/' 
+            output_folder = '../data/' + str(dataset) + '/' + str(name) + '/' 
             df_filter_dataset = df[df['SpeciesID'] == name]
             df_filter_dataset = df_filter_dataset[df_filter_dataset['Ml'] == dataset]
             df_filter_dataset['File'] = df_filter_dataset['File'].apply(lambda x: 'G:/videos/' + x)
