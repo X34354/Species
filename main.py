@@ -141,49 +141,62 @@ def check_create_folder(directory_path):
         os.makedirs(directory_path)
         print(f"Created folder: {directory_path}")
     else:
-        print(f"Folder already exists: {directory_path}")            
+        print(f"Folder already exists: {directory_path}")        
+      
+
+try:
+    # Tu código aquí
+    # ...
+    # ...
+
+    # Si hay algún error, se lanzará una excepción
+except Exception as e:
+    # Mostrar una leyenda en lugar del error
+    st.write("¡Ups! Algo salió mal. Inténtalo de nuevo más tarde.")
 def main():
-
-    check_create_folder(directory_path)
-    check_create_folder(directory_path_video)
-    check_create_folder(directory_path_csv)
-
-    st.title('Species model')
-    hide_streamlit_menu_footer()
-    st.set_option('deprecation.showfileUploaderEncoding', False)
-
-    model_file = st.file_uploader("Upload Model", type=["pt"])
-
-    if model_file is not None:
-        model = load_model(model_file, UPLOAD_FOLDER_model)
-
-    uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
-    download_csv = st.checkbox("Download CSV")
-    download_videos = st.checkbox("Download Videos")
-
-
-    if st.button("Predict"):
-        if uploaded_files is not None:
-            df_con = process_uploaded_files(model, uploaded_files)
-            _ = guardar_como_csv(df_con)
-            pass_video()
-            
-    if download_csv and (len( os.listdir(directory_path_csv)) != 0):
-        download_files(directory_path_csv, "Download CSV:" , '.csv')
-
-    if download_videos and (len( os.listdir(directory_path_video)) != 0) :
-
-        download_files(directory_path, "Download VIDEOS:" , '.avi')
-
-    if st.button("delete all (videos , csvs and cache)"):
-        delete_files_in_directory(directory_path)
-        delete_files_in_directory(directory_path_video)
-        delete_files_in_directory(directory_path_csv)
-        st.cache_resource.clear()
-
-    delete_inactive_files(directory_path, inactivity_time)
-    delete_inactive_files(directory_path_video, inactivity_time)
-    delete_inactive_files(directory_path_csv, inactivity_time)
-    
+    try : 
+      check_create_folder(directory_path)
+      check_create_folder(directory_path_video)
+      check_create_folder(directory_path_csv)
+  
+      st.title('Species model')
+      hide_streamlit_menu_footer()
+      st.set_option('deprecation.showfileUploaderEncoding', False)
+  
+      model_file = st.file_uploader("Upload Model", type=["pt"])
+  
+      if model_file is not None:
+          model = load_model(model_file, UPLOAD_FOLDER_model)
+  
+      uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
+      download_csv = st.checkbox("Download CSV")
+      download_videos = st.checkbox("Download Videos")
+  
+  
+      if st.button("Predict"):
+          if uploaded_files is not None:
+              df_con = process_uploaded_files(model, uploaded_files)
+              _ = guardar_como_csv(df_con)
+              pass_video()
+              
+      if download_csv and (len( os.listdir(directory_path_csv)) != 0):
+          download_files(directory_path_csv, "Download CSV:" , '.csv')
+  
+      if download_videos and (len( os.listdir(directory_path_video)) != 0) :
+  
+          download_files(directory_path, "Download VIDEOS:" , '.avi')
+  
+      if st.button("delete all (videos , csvs and cache)"):
+          delete_files_in_directory(directory_path)
+          delete_files_in_directory(directory_path_video)
+          delete_files_in_directory(directory_path_csv)
+          st.cache_resource.clear()
+  
+      delete_inactive_files(directory_path, inactivity_time)
+      delete_inactive_files(directory_path_video, inactivity_time)
+      delete_inactive_files(directory_path_csv, inactivity_time)
+    except Exception as e:
+        # Mostrar una leyenda en lugar del error
+        st.write("oops! Something went wrong. Try again later.")    
 if __name__ == '__main__' :
     main()
