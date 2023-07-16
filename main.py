@@ -13,9 +13,12 @@ import time
 
 import zipfile
 def clear_cache():
-    # Esta función se ejecutará si no hay actividad durante más de 1 minuto
-    st.caching.clear_cache()
 
+    st.caching.clear_cache()
+    
+directory_path = "datasets/" 
+directory_path_video = "videos/"  
+inactivity_time = 60  # 5 minutes in seconds
 UPLOAD_FOLDER_videos = 'videos'
 UPLOAD_FOLDER_model = 'models'
 test_species_dic = { 'Panthera onca' : 0,  'Puma concolor': 1,  'Leopardus pardalis' : 2,
@@ -124,6 +127,21 @@ def process_uploaded_files(model, uploaded_files):
 
     return df_con
 
+
+def delete_inactive_files(directory_path, inactivity_time):
+    # Get the list of files in the specified directory
+    files = os.listdir(directory_path)
+
+    for file in files:
+        # Get the full path of the file
+        file_path = os.path.join(directory_path, file)
+
+        # Check if the file has been modified within the last 5 minutes
+        if time.time() - os.path.getmtime(file_path) > inactivity_time:
+            # Delete the file
+            os.remove(file_path)
+            print(f"File deleted: {file_path}")
+            
 def main():
     st.title('Species model')
     hide_streamlit_menu_footer()
@@ -152,7 +170,7 @@ def main():
                 st.download_button(label=str('CSV'), data=file_content, file_name=csv_file)
 
             pass_video()
-            hide_download_button = False
+            delete = True
 
     if hide_download_button:
         st.write("Waiting for prediction...")
@@ -168,7 +186,9 @@ def main():
         delete_files_in_directory('datasets/')
         delete_files_in_directory('videos/')
         st.cache_resource.clear()
-        
 
+    delete_inactive_files(directory_path, inactivity_time)
+    delete_inactive_files(directory_path_video, inactivity_time)
+    
 if __name__ == '__main__' :
     main()
