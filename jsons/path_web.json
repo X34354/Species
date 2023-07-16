@@ -1,0 +1,8 @@
+{
+    "directory_path": "datasets/",
+    "directory_path_video": "videos/",
+    "directory_path_csv": "csvs folder/",
+    "inactivity_time": 3600,
+    "UPLOAD_FOLDER_videos": "videos",
+    "UPLOAD_FOLDER_model": "models"
+  }

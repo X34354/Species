@@ -1,0 +1,11 @@
+{
+    "directory": "G:/",
+    "Base": "../data/Base.csv",
+    "Train": "G:/data/Train",
+    "Test": "G:/data/Test",
+    "Val": "G:/data/Val",
+    "Data_filter": "../data/df_filter.csv",
+    "Species": "../data/Especies Red.csv",
+    "Data": "../data/",
+    "Videos": "G:/videos/"
+  }
