@@ -18,7 +18,7 @@ def clear_cache():
     
 directory_path = "datasets/" 
 directory_path_video = "videos/"  
-inactivity_time = 60  # 5 minutes in seconds
+inactivity_time = 3600  
 UPLOAD_FOLDER_videos = 'videos'
 UPLOAD_FOLDER_model = 'models'
 test_species_dic = { 'Panthera onca' : 0,  'Puma concolor': 1,  'Leopardus pardalis' : 2,
@@ -156,6 +156,7 @@ def main():
 
     download_csv = st.checkbox("Download CSV")
     download_videos = st.checkbox("Download Videos")
+    watch_saved_videos = st.checkbox("watch saved videos")
     hide_download_button = True
 
     if st.button("Predict"):
@@ -176,11 +177,12 @@ def main():
         st.write("Waiting for prediction...")
 
     if download_videos:
+        if watch_saved_videos: 
         video_path = os.listdir('datasets/')
-        st.write("Download Videos:")
-        for ele in video_path:
-            file_content = get_download_link('datasets/' + ele)
-            st.download_button(label=str(ele), data=file_content, file_name=ele)
+            st.write("Download Videos:")
+            for ele in video_path:
+                file_content = get_download_link('datasets/' + ele)
+                st.download_button(label=str(ele), data=file_content, file_name=ele)
 
     if st.button("Clear All"):
         delete_files_in_directory('datasets/')
