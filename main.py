@@ -178,7 +178,7 @@ def main():
 
     if download_videos:
         if watch_saved_videos: 
-        video_path = os.listdir('datasets/')
+            video_path = os.listdir('datasets/')
             st.write("Download Videos:")
             for ele in video_path:
                 file_content = get_download_link('datasets/' + ele)
