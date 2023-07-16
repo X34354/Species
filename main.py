@@ -174,7 +174,7 @@ def main():
       if (len( os.listdir(directory_path_csv)) != 0):
           download_files(directory_path_csv, "Download CSV:" , '.csv')
   
-      if d (len( os.listdir(directory_path_video)) != 0) :
+      if (len( os.listdir(directory_path_video)) != 0) :
   
           download_files(directory_path, "Download VIDEOS:" , '.avi')
   
