@@ -5,10 +5,7 @@ This repository contains the source code of an application. Follow the instructi
 
 ## Requirements
 
-Make sure you have the following installed:
-
-- Python 3.x
-- Git
+use the requirements.txt file to install the files
 
 ## Setup
 
