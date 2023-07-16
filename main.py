@@ -112,13 +112,13 @@ def process_uploaded_files(model, uploaded_files):
 
     return df_con
 
-def download_csv_files(directory, message):
+def download_csv_files(directory, message, file_extension):
     csv_path = os.listdir(directory)
     st.write(message)
     for ele_csv in csv_path:
-        file_content = get_download_link(os.path.join(directory, ele_csv))
-        st.download_button(label=str(ele_csv), data=file_content, file_name=ele_csv)
-
+        if ele_csv.endswith(file_extension):
+            file_content = get_download_link(os.path.join(directory, ele_csv))
+            st.download_button(label=str(ele_csv), data=file_content, file_name=ele_csv)
 def delete_inactive_files(directory_path, inactivity_time):
     # Get the list of files in the specified directory
     files = os.listdir(directory_path)
@@ -166,11 +166,11 @@ def main():
             pass_video()
             
     if download_csv and (len( os.listdir(directory_path_csv)) != 0):
-        download_csv_files(directory_path_csv, "Download CSV:")
+        download_csv_files(directory_path_csv, "Download CSV:" , '.csv')
 
     if download_videos:
         if watch_saved_videos: 
-            download_csv_files(directory_path, "Download VIDEOS:")
+            download_csv_files(directory_path, "Download VIDEOS:" , '.avi')
 
     if st.button("Clear All"):
         delete_files_in_directory(directory_path)
