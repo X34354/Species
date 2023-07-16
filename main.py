@@ -172,7 +172,7 @@ def main():
 
         download_files(directory_path, "Download VIDEOS:" , '.avi')
 
-    if st.button("Clear All"):
+    if st.button("delete all (videos , csvs and cache)"):
         delete_files_in_directory(directory_path)
         delete_files_in_directory(directory_path_video)
         delete_files_in_directory(directory_path_csv)
