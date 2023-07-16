@@ -1,28 +1,26 @@
-
 import cv2
 from ultralytics import YOLO
 import pandas as pd
 import numpy as np
 import streamlit as st
-from src.test import unique_test , pass_video, delete_files_in_folder
+from src.test import unique_test , pass_video
 import os
 import base64
 import os
-import time
 
-
-import zipfile
-def clear_cache():
-
-    st.caching.clear_cache()
-    
 directory_path = "datasets/" 
 directory_path_video = "videos/"  
+directory_path_csv = 'csvs folder/'
 inactivity_time = 3600  
 UPLOAD_FOLDER_videos = 'videos'
 UPLOAD_FOLDER_model = 'models'
-test_species_dic = { 'Panthera onca' : 0,  'Puma concolor': 1,  'Leopardus pardalis' : 2,
-                     'Crax rubra' : 3,  'Aramides albiventris' : 4, 'Aramus Guarauna' : 5}
+
+test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' ,
+                     3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }
+
+def clear_cache():
+    st.caching.clear_cache()
+
 @st.cache_resource
 def save_uploaded_file(uploaded_file, path):
     # Crea la carpeta de subida si no existe
@@ -48,13 +46,12 @@ def delete_files_in_directory(directory):
             print(f"Deleted file: {file_path}")
 
     print("Deletion of files completed.")
-# Función para guardar el DataFrame como archivo CSV
+
 @st.cache_resource
 def guardar_como_csv(dataframe):
-    csv_file = "resultados.csv"
+    csv_file = "csvs folder/resultados.csv"
     dataframe.to_csv(csv_file, index=False)
     return csv_file
-#load model 
 
 @st.cache_resource
 def get_download_link(file_path):
@@ -74,19 +71,6 @@ def get_download_link(file_path):
         href = ""
 
     return href
-
-@st.cache_resource
-def zip_videos(folder_path, zip_path,video_file):
-    current_path = os.getcwd()
-    folder_path = "".join([current_path, folder_path])
-    # Obtener la ruta del archivo en el sistema de archivos
-    file_path = "".join([folder_path, video_file.name])
-    # Escribir el archivo en el zip
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipf.write(file_path, os.path.basename(file_path))
-
-#model = YOLO('../models/model_l.pt')  # load model
-test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' , 3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }
 
 @st.cache_resource
 def load_model(model_file,UPLOAD_FOLDER_model) :
@@ -127,6 +111,12 @@ def process_uploaded_files(model, uploaded_files):
 
     return df_con
 
+def download_csv_files(directory, message):
+    csv_path = os.listdir(directory)
+    st.write(message)
+    for ele_csv in csv_path:
+        file_content = get_download_link(os.path.join(directory, ele_csv))
+        st.download_button(label=str(ele_csv), data=file_content, file_name=ele_csv)
 
 def delete_inactive_files(directory_path, inactivity_time):
     # Get the list of files in the specified directory
@@ -143,6 +133,7 @@ def delete_inactive_files(directory_path, inactivity_time):
             print(f"File deleted: {file_path}")
             
 def main():
+
     st.title('Species model')
     hide_streamlit_menu_footer()
     st.set_option('deprecation.showfileUploaderEncoding', False)
@@ -153,44 +144,32 @@ def main():
         model = load_model(model_file, UPLOAD_FOLDER_model)
 
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
-
     download_csv = st.checkbox("Download CSV")
     download_videos = st.checkbox("Download Videos")
     watch_saved_videos = st.checkbox("watch saved videos")
-    hide_download_button = True
 
     if st.button("Predict"):
         if uploaded_files is not None:
             df_con = process_uploaded_files(model, uploaded_files)
-
-            csv_file = guardar_como_csv(df_con)
-
-            if download_csv:
-                st.write("Download CSV:")
-                file_content = get_download_link(csv_file)
-                st.download_button(label=str('CSV'), data=file_content, file_name=csv_file)
-
+            _ = guardar_como_csv(df_con)
             pass_video()
-            delete = True
-
-    if hide_download_button:
-        st.write("Waiting for prediction...")
+            
+    if download_csv and (len( os.listdir(directory_path_csv)) != 0):
+        download_csv_files(directory_path_csv, "Download CSV:")
 
     if download_videos:
         if watch_saved_videos: 
-            video_path = os.listdir('datasets/')
-            st.write("Download Videos:")
-            for ele in video_path:
-                file_content = get_download_link('datasets/' + ele)
-                st.download_button(label=str(ele), data=file_content, file_name=ele)
+            download_csv_files(directory_path, "Download VIDEOS:")
 
     if st.button("Clear All"):
-        delete_files_in_directory('datasets/')
-        delete_files_in_directory('videos/')
+        delete_files_in_directory(directory_path)
+        delete_files_in_directory(directory_path_video)
+        delete_files_in_directory(directory_path_csv)
         st.cache_resource.clear()
 
     delete_inactive_files(directory_path, inactivity_time)
     delete_inactive_files(directory_path_video, inactivity_time)
+    delete_inactive_files(directory_path_csv, inactivity_time)
     
 if __name__ == '__main__' :
     main()
