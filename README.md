@@ -5,7 +5,7 @@ This repository contains the source code of an application. Follow the instructi
 
 ## Requirements
 
-use the requirements.txt file to install the files
+Use the requirements.txt file to install the files
 
 ## Setup
 
