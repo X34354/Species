@@ -116,7 +116,7 @@ if __name__ == '__main__' :
     # Iterate over the names in the 'name' column of the DataFrame
     for nom in l : 
         for name in df_specie['SpeciesID']:
-            name = 'G:/data/' + nom + '/' + name
+            name = '../data/' + nom + '/' + name
             create_folder(name)
     
 
