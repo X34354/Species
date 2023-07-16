@@ -1,7 +1,9 @@
 # Species
 ![Deteccion](gif.gif)
 
+## About
 
+This project - repository is a demo version of the advances of a model to predict and detect animals in the Lacandona jungle of Mexico for research
 
 ## Requirements
 
