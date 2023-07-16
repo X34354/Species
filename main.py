@@ -131,8 +131,18 @@ def delete_inactive_files(directory_path, inactivity_time):
             # Delete the file
             os.remove(file_path)
             print(f"File deleted: {file_path}")
-            
+
+def check_create_folder(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Created folder: {directory_path}")
+    else:
+        print(f"Folder already exists: {directory_path}")            
 def main():
+
+    check_create_folder(directory_path)
+    check_create_folder(directory_path_video)
+    check_create_folder(directory_path_csv)
 
     st.title('Species model')
     hide_streamlit_menu_footer()
