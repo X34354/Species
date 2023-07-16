@@ -183,7 +183,7 @@ def main():
           delete_files_in_directory(directory_path_video)
           delete_files_in_directory(directory_path_csv)
           st.cache_resource.clear()
-          time.sleep(10)
+          time.sleep(30)
           st.text("Deletion of files completed.")
       delete_inactive_files(directory_path, inactivity_time)
       delete_inactive_files(directory_path_video, inactivity_time)
