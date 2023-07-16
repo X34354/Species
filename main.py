@@ -39,14 +39,17 @@ def delete_files_in_directory(directory):
     # Get the list of files in the specified directory
     files = os.listdir(directory)
 
+    # Create an empty space to display the progress
+    progress_text = st.empty()
+
     # Iterate through each file and delete it
     for file in files:
         file_path = os.path.join(directory, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
-            print(f"Deleted file: {file_path}")
+            progress_text.text(f"Deleted file: {file_path}")
 
-    print("Deletion of files completed.")
+    progress_text.text("Deletion of files completed.")
 
 @st.cache_resource
 def guardar_como_csv(dataframe):
