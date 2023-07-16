@@ -47,9 +47,9 @@ def delete_files_in_directory(directory):
         file_path = os.path.join(directory, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
-            progress_text.text(f"Deleted file: {file_path}")
-
-    progress_text.text("Deletion of files completed.")
+            
+    
+    
 
 @st.cache_resource
 def guardar_como_csv(dataframe):
@@ -183,7 +183,8 @@ def main():
           delete_files_in_directory(directory_path_video)
           delete_files_in_directory(directory_path_csv)
           st.cache_resource.clear()
-  
+          time.sleep(10)
+          st.text("Deletion of files completed.")
       delete_inactive_files(directory_path, inactivity_time)
       delete_inactive_files(directory_path_video, inactivity_time)
       delete_inactive_files(directory_path_csv, inactivity_time)
