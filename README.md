@@ -14,7 +14,7 @@ Follow the steps below to configure and run the application:
 1. Clone this repository to your local machine using the following Git command: 
 2. Navigate to the root directory of the repository:
 
-3. Install the project dependencies by running the following command in the terminal:
+3. Install the project dependencies by running the following command in the terminal: streamlit run main.py
 
 
 This will install all the necessary libraries and packages to run the application.
