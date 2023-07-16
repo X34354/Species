@@ -194,7 +194,7 @@ def main():
       delete_inactive_files(directory_path_video, inactivity_time)
       delete_inactive_files(directory_path_csv, inactivity_time)
     except Exception as e:
-        # Mostrar una leyenda en lugar del error
+
         st.write("oops! Something went wrong. Try again later.")    
 if __name__ == '__main__' :
     main()
