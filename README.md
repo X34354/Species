@@ -28,7 +28,7 @@ To run the application, follow the steps below:
 2. Open the terminal and execute the following command: streamlit run main.py
 
 
-This will start the application, and you can interact with it based on its specific functionalities.
+
 
 
 
