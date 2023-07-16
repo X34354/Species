@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import cv2
 import random
-
+import json
 def extract_random_frames(video_path, frame_count, output_folder, name):
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -105,18 +105,21 @@ def create_folder(folder_name):
 
 if __name__ == '__main__' :
     
+    data = open('../jsons/path_general.json')
+    data = json.load(data)
+    
     l = ['Train', 'Test', 'Val']
-    create_folder("G:/data/Train")
-    create_folder("G:/data/Test")
-    create_folder("G:/data/Val")
+    create_folder(data['Train'])
+    create_folder(data['Test'])
+    create_folder(data['Val'])
     
 
-    df = pd.read_csv('../data/df_filter.csv')
-    df_specie = pd.read_excel('../data/Especies Red.csv')
+    df = pd.read_csv(data['Data_filter'])
+    df_specie = pd.read_excel(data['Species'])
     # Iterate over the names in the 'name' column of the DataFrame
     for nom in l : 
         for name in df_specie['SpeciesID']:
-            name = '../data/' + nom + '/' + name
+            name = data['Data'] + nom + '/' + name
             create_folder(name)
     
 
@@ -128,8 +131,8 @@ if __name__ == '__main__' :
                 frame_count = 400
             else :
                 frame_count = 130
-            output_folder = '../data/' + str(dataset) + '/' + str(name) + '/' 
+            output_folder =  data['Data'] + str(dataset) + '/' + str(name) + '/' 
             df_filter_dataset = df[df['SpeciesID'] == name]
             df_filter_dataset = df_filter_dataset[df_filter_dataset['Ml'] == dataset]
-            df_filter_dataset['File'] = df_filter_dataset['File'].apply(lambda x: 'G:/videos/' + x)
+            df_filter_dataset['File'] = df_filter_dataset['File'].apply(lambda x:  data['Videos'] + x)
             extracted_frames = extract_frames_from_videos(df_filter_dataset, frame_count, output_folder)

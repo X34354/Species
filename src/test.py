@@ -7,7 +7,7 @@ import seaborn as sns
 import os
 import time
 import shutil
-
+import json
 
 
 
@@ -204,12 +204,16 @@ def pass_video():
         os.rmdir(folder_path)
 
 if __name__ == '__main__' :
-    path = 'G:/videos/'
-    p = 'G:/video_red/videos_val/Crax rubra/Sar_1_25.AVI'
+
+    data = open('../jsons/path_general.json')
+    data = json.load(data)
+
+    path = data['Videos']
+    p = data['Val'] + '/Crax rubra/Sar_1_25.AVI'
     test_species_dic = { 'Panthera onca' : 0,  'Puma concolor': 1,  'Leopardus pardalis' : 2, 'Crax rubra' : 3,  'Aramides albiventris' : 4, 'Aramus Guarauna' : 5}
     test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' , 3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }
 
-    df_val = pd.read_csv('data/df_filter.csv')
+    df_val = pd.read_csv(data['Data_filter'])
     df_val  = df_val[df_val['Ml'] == 'val']
     df_val = df_val[df_val['SpeciesID'].isin(test_species_dic.keys())]
     df_val['File'] = df_val['File'].apply(lambda x: path + x)
@@ -217,7 +221,7 @@ if __name__ == '__main__' :
     
     df_val = df_val.groupby('SpeciesID').head(10)
 
-    model = YOLO('G:/model_l.pt')  # load model
+    model = YOLO( data['directory'] + 'model_l.pt')  # load model
 
     df_final = unique_test(model , p , 'Crax', test_species_dic , change = True)
     df, labels , prediccion = list_test(model ,list(df_val['File']) , list(df_val['SpeciesID']) , df_val) 

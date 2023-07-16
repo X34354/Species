@@ -1,20 +1,25 @@
 import cv2
 from ultralytics import YOLO
 import pandas as pd
-import numpy as np
 import streamlit as st
 from src.test import unique_test , pass_video
 import os
 import base64
 import os
 import time 
+import json 
 
-directory_path = "datasets/" 
-directory_path_video = "videos/"  
-directory_path_csv = 'csvs folder/'
-inactivity_time = 3600  
-UPLOAD_FOLDER_videos = 'videos'
-UPLOAD_FOLDER_model = 'models'
+
+data = open('jsons/path_web.json')
+data = json.load(data)
+
+directory_path = data["directory_path"]
+directory_path_video = data["directory_path_video"]
+directory_path_csv = data["directory_path_csv"]
+inactivity_time = data["inactivity_time"]
+UPLOAD_FOLDER_videos = data["UPLOAD_FOLDER_videos"]
+UPLOAD_FOLDER_model = data["UPLOAD_FOLDER_model"]
+
 
 test_species_dic = {  0 : 'Panthera onca' ,  1: 'Puma concolor',  2 : 'Leopardus pardalis' ,
                      3 : 'Crax rubra' ,  4 : 'Aramides albiventris' , 5 : 'Aramus Guarauna' }

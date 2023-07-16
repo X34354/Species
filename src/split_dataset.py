@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import os
-
+import json 
 def filter_df(df, df_species, duration):
     """
     Filter the DataFrame 'df' based on the specified species and duration.
@@ -106,10 +106,13 @@ def filter_existing_videos(df_arc, name ):
     return filtered_df
 
 if __name__ == '__main__' :
+    data = open('../jsons/path_general.json')
+    data = json.load(data)
+    
     #read data base
-    df = pd.read_excel('data/Base.xlsx')
+    df = pd.read_csv(data['Base'])
     #the names of the species we are interested in
-    df_specie = pd.read_excel('data/Especies Red.xlsx')
+    df_specie = pd.read_csv(data['Data_filter'])
     # Create a new DataFrame with the filtered records
     filtered_df = filter_df(df,df_specie,20)
 
@@ -119,4 +122,4 @@ if __name__ == '__main__' :
 
     df_split  = split_data_by_group(filtered_df_exis, df_specie, train_ratio=0.7, test_ratio=0.2, val_ratio=0.1)
 
-    df_split.to_csv('data/df_filter.csv')
+    df_split.to_csv(data['Data_filter'])
