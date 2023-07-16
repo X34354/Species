@@ -161,8 +161,8 @@ def main():
           model = load_model(model_file, UPLOAD_FOLDER_model)
   
       uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
-      download_csv = st.checkbox("Download CSV")
-      download_videos = st.checkbox("Download Videos")
+      #download_csv = st.checkbox("Download CSV")
+      #download_videos = st.checkbox("Download Videos")
   
   
       if st.button("Predict"):
@@ -171,14 +171,14 @@ def main():
               _ = guardar_como_csv(df_con)
               pass_video()
               
-      if download_csv and (len( os.listdir(directory_path_csv)) != 0):
+      if (len( os.listdir(directory_path_csv)) != 0):
           download_files(directory_path_csv, "Download CSV:" , '.csv')
   
-      if download_videos and (len( os.listdir(directory_path_video)) != 0) :
+      if d (len( os.listdir(directory_path_video)) != 0) :
   
           download_files(directory_path, "Download VIDEOS:" , '.avi')
   
-      if st.button("delete all (videos , csvs and cache)"):
+      if st.button("Delete all (videos , csvs and cache)"):
           delete_files_in_directory(directory_path)
           delete_files_in_directory(directory_path_video)
           delete_files_in_directory(directory_path_csv)
