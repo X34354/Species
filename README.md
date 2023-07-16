@@ -1,7 +1,7 @@
 # Species
 
 
-This repository contains the source code of an application. Follow the instructions below to run it successfully.
+
 
 ## Requirements
 
