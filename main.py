@@ -144,15 +144,7 @@ def check_create_folder(directory_path):
         print(f"Folder already exists: {directory_path}")        
       
 
-try:
-    # Tu código aquí
-    # ...
-    # ...
 
-    # Si hay algún error, se lanzará una excepción
-except Exception as e:
-    # Mostrar una leyenda en lugar del error
-    st.write("¡Ups! Algo salió mal. Inténtalo de nuevo más tarde.")
 def main():
     try : 
       check_create_folder(directory_path)
