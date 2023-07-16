@@ -30,9 +30,5 @@ To run the application, follow the steps below:
 
 This will start the application, and you can interact with it based on its specific functionalities.
 
-## Issues and Questions
 
-If you encounter any issues or have any questions about this project, feel free to open an issue on GitHub. We'll be happy to assist you.
-
-Enjoy the project!
 
