@@ -27,6 +27,8 @@ To run the application, follow the steps below:
 
 3. The model is required, you can find it at the following link: https://drive.google.com/drive/folders/1cM5MKXT2dQSnA0Pt7hu3b1AgnuuKcWAC?usp=drive_link
 
+4. Another option is to go to this link where you can see the page where you can make the prediction : https://species-vw897od2ped.streamlit.app/
+
 
 
 
