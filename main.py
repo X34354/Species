@@ -112,7 +112,7 @@ def process_uploaded_files(model, uploaded_files):
 
     return df_con
 
-def download_csv_files(directory, message, file_extension):
+def download_files(directory, message, file_extension):
     csv_path = os.listdir(directory)
     st.write(message)
     for ele_csv in csv_path:
@@ -157,7 +157,7 @@ def main():
     uploaded_files = st.file_uploader("Load CSV", accept_multiple_files=True)
     download_csv = st.checkbox("Download CSV")
     download_videos = st.checkbox("Download Videos")
-    watch_saved_videos = st.checkbox("watch saved videos")
+
 
     if st.button("Predict"):
         if uploaded_files is not None:
@@ -166,11 +166,11 @@ def main():
             pass_video()
             
     if download_csv and (len( os.listdir(directory_path_csv)) != 0):
-        download_csv_files(directory_path_csv, "Download CSV:" , '.csv')
+        download_files(directory_path_csv, "Download CSV:" , '.csv')
 
-    if download_videos:
-        if watch_saved_videos: 
-            download_csv_files(directory_path, "Download VIDEOS:" , '.avi')
+    if download_videos and (len( os.listdir(directory_path_video)) != 0) :
+
+        download_files(directory_path, "Download VIDEOS:" , '.avi')
 
     if st.button("Clear All"):
         delete_files_in_directory(directory_path)
