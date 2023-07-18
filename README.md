@@ -15,6 +15,7 @@ pip install -r requerimientos.txt
 
 1. Clone this repository to your local machine using the following Git command: 
 2. Navigate to the root directory of the repository:
+3. Use the requirements.txt file to install the files
 
 
 ## Execution
